@@ -1,0 +1,22 @@
+{
+  "name": "xstate-otp-animated",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@xstate/react": "0.8.1",
+    "xstate": "4.9.1",
+    "framer-motion": "2.0.0-beta.71",
+    "next": "9.4.4",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
+    "react-feather": "2.0.8",
+    "tailwindcss": "1.4.6"
+  },
+  "keywords": [],
+  "description": ""
+}
