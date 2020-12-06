@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useMachine } from '@xstate/react';
-import Head from 'next/head';
-import { CheckCircle, AlertCircle } from 'react-feather';
-import { motion, AnimateSharedLayout } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { useMachine } from "@xstate/react";
+import Head from "next/head";
+import { CheckCircle, AlertCircle } from "react-feather";
+import { motion, AnimateSharedLayout } from "framer-motion";
 
-import otpMachine from '../otpMachine';
+import otpMachine from "../otpMachine";
 
 function UserForm(props) {
   const { initialPhone } = props;
   const [currentState, sendEvent, service] = useMachine(otpMachine, {
     context: {
-      phone: initialPhone,
-    },
+      phone: initialPhone
+    }
   });
   const { phone, otp } = currentState.context;
   const [stateSavedPhone, setStateSavedPhone] = useState(phone);
-  const [stateName, setStateName] = useState('Aditya Agarwal');
+  const [stateName, setStateName] = useState("Aditya Agarwal");
 
   const isVerificationNeeded = phone !== stateSavedPhone;
 
@@ -26,33 +26,33 @@ function UserForm(props) {
       handleSendOtp();
     } else {
       // make API call to save data and then show in UI.
-      alert('Everything Saved!');
+      alert("Everything Saved!");
     }
   }
 
   function handleUpdatePhone(event) {
     const newPhone = event.target.value;
-    sendEvent({ type: 'UPDATE_PHONE', phone: newPhone });
+    sendEvent({ type: "UPDATE_PHONE", phone: newPhone });
   }
 
   function handleSendOtp() {
-    sendEvent('SEND_OTP');
+    sendEvent("SEND_OTP");
   }
 
   function handleUpdateOtp(event) {
     const newOtp = event.target.value;
-    sendEvent({ type: 'UPDATE_OTP', otp: newOtp });
+    sendEvent({ type: "UPDATE_OTP", otp: newOtp });
   }
 
   function handleSubmitOtp(event) {
     event.preventDefault();
-    sendEvent('VERIFY_OTP');
+    sendEvent("VERIFY_OTP");
   }
 
   useEffect(() => {
-    service.onTransition(state => {
+    service.onTransition((state) => {
       console.log(state.value);
-      if (state.matches('otpVerified')) {
+      if (state.matches("otpVerified")) {
         setStateSavedPhone(state.context.phone);
       }
     });
@@ -63,9 +63,9 @@ function UserForm(props) {
       <motion.div
         animate
         className="flex items-center justify-center bg-white text-gray-900 pt-4 pb-8 px-4 rounded-lg shadow-md"
-        style={{ width: '300px' }}
+        style={{ width: "300px" }}
       >
-        {currentState.matches('idle') || currentState.matches('otpVerified') ? (
+        {currentState.matches("idle") || currentState.matches("otpVerified") ? (
           <motion.form animate onSubmit={handleSubmitForm} className="">
             <h2 className="text-center font-bold text-2xl mb-8">
               Update Profile
@@ -78,7 +78,7 @@ function UserForm(props) {
                   className="bg-gray-100 text-gray-700 w-full px-3 py-2 text-xl rounded-md shadow-inner"
                   type="text"
                   value={stateName}
-                  onChange={event => setStateName(event.target.value)}
+                  onChange={(event) => setStateName(event.target.value)}
                 />
               </label>
               <label className="">
@@ -111,10 +111,10 @@ function UserForm(props) {
                 type="submit"
                 className="bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 rounded-md shadow-lg transition-colors duration-500 ease-in-out"
               >
-                {isVerificationNeeded ? 'Proceed' : 'Submit'}
+                {isVerificationNeeded ? "Proceed" : "Submit"}
               </button>
             </div>
-            {currentState.matches('otpVerified') && (
+            {currentState.matches("otpVerified") && (
               <p className="text-center mt-2 text-green-600">
                 OTP verified and Phone saved
               </p>
@@ -123,20 +123,20 @@ function UserForm(props) {
         ) : (
           <motion.div animate className="w-full">
             <h2 className="text-center font-bold text-2xl mb-8">Verify OTP</h2>
-            {currentState.matches('otpSending') && (
+            {currentState.matches("otpSending") && (
               <p className="text-center">Sending OTP...</p>
             )}
             {[
-              'otpSent',
-              'otpSendFailed',
-              'otpVerifying',
-              'otpVerifyFailed',
+              "otpSent",
+              "otpSendFailed",
+              "otpVerifying",
+              "otpVerifyFailed"
             ].some(currentState.matches) && (
               <div>
-                {currentState.matches('otpSendFailed') && (
+                {currentState.matches("otpSendFailed") && (
                   <p className="text-red-600 text-center">Couldn't send OTP</p>
                 )}
-                {['otpSent', 'otpVerifying', 'otpVerifyFailed'].some(
+                {["otpSent", "otpVerifying", "otpVerifyFailed"].some(
                   currentState.matches
                 ) && (
                   <form onSubmit={handleSubmitOtp}>
@@ -150,9 +150,9 @@ function UserForm(props) {
                           type="text"
                           value={otp}
                           onChange={handleUpdateOtp}
-                          disabled={currentState.matches('otpVerifying')}
+                          disabled={currentState.matches("otpVerifying")}
                         />
-                        {currentState.matches('otpVerifyFailed') && (
+                        {currentState.matches("otpVerifyFailed") && (
                           <p className="absolute bottom-0 text-red-600">
                             OTP verification failed
                           </p>
@@ -160,18 +160,18 @@ function UserForm(props) {
                       </label>
                       <button
                         type="submit"
-                        disabled={currentState.matches('otpVerifying')}
+                        disabled={currentState.matches("otpVerifying")}
                         className="bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 rounded-md shadow-lg transition-colors duration-500 ease-in-out"
                       >
-                        {currentState.matches('otpVerifying')
-                          ? 'Verifying OTP...'
-                          : 'Verify OTP'}
+                        {currentState.matches("otpVerifying")
+                          ? "Verifying OTP..."
+                          : "Verify OTP"}
                       </button>
                     </div>
                   </form>
                 )}
                 <div className="mt-4 flex justify-evenly">
-                  <button onClick={() => sendEvent('CHANGE_PHONE')}>
+                  <button onClick={() => sendEvent("CHANGE_PHONE")}>
                     Change Phone
                   </button>
                   <button onClick={handleSendOtp}>Resend OTP</button>
@@ -205,8 +205,8 @@ function Home(props) {
 
 Home.getInitialProps = async () => {
   const { data } = await fetch(
-    'https://c4rey.sse.codesandbox.io/api/getSavedPhone'
-  ).then(res => res.json());
+    "https://5two5.sse.codesandbox.io/api/getSavedPhone"
+  ).then((res) => res.json());
   return { phone: data.phone };
 };
 
